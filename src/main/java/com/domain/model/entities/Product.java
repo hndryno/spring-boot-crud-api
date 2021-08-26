@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name="tbl_product")
@@ -19,9 +20,11 @@ public class Product implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY) //untuk membuat primary keynya jadi auto increment
     private Long id;
 
+    @NotEmpty(message = "Nama tidak boleh kosong")
     @Column(name="nama_product", length = 100) //ini untuk ganti nama produk
     private String nama; //yang menarik adalah jika String di database lain itu bukan varchar maka si jba akan menyesuaikan itu
 
+    @NotEmpty(message = "Deskripsi tidak boleh kosong")
     @Column(name="deskripsi_produk", length = 500) //ini untuk ganti nama deskripsi produk
     private String description;
 

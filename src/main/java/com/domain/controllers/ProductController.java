@@ -1,9 +1,17 @@
 package com.domain.controllers;
 
+import javax.management.RuntimeErrorException;
+import javax.validation.Valid;
+
+import com.domain.dto.ResponseData;
 import com.domain.model.entities.Product;
 import com.domain.services.ProductService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,9 +31,36 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping
-    public Product create(@RequestBody Product product) {
-        return productService.save(product);
+    //sesudah pakai validator
+    public ResponseEntity<ResponseData<Product>> create(@Valid @RequestBody Product product, Errors errors) {
+
+        ResponseData<Product> responseData = new ResponseData<>();
+
+        if(errors.hasErrors()){
+            for(ObjectError err: errors.getAllErrors()){
+                // kalau ada error kita tampilkan errornya
+                responseData.getMessages().add(err.getDefaultMessage());
+            }
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+        responseData.setStatus(true);
+        responseData.setPayload(productService.save(product));
+        return ResponseEntity.ok(responseData);
     }
+
+    //sebelum pakai validator
+    // public Product create(@Valid @RequestBody Product product, Errors errors) {
+    //     if(errors.hasErrors()){
+    //         for(ObjectError err: errors.getAllErrors()){
+    //             // kalau ada error kita cetak diconsole
+    //             System.err.println(err.getDefaultMessage());
+    //         }
+    //         throw new RuntimeException("Error validasi");
+    //     }
+    //     return productService.save(product);
+    // }
 
     @GetMapping
     public Iterable<Product> findAll(){
@@ -38,10 +73,29 @@ public class ProductController {
     }
 
     //put mapping disini tidak pakai id, dia melakukan fungsi upsert
+    //sesudah validasi
     @PutMapping
-    public Product update(@RequestBody Product product) {
-        return productService.save(product);
-    }
+    public ResponseEntity<ResponseData<Product>> update(@Valid @RequestBody Product product, Errors errors) {
+
+        ResponseData<Product> responseData = new ResponseData<>();
+
+       if(errors.hasErrors()){
+           for(ObjectError err: errors.getAllErrors()){
+               // kalau ada error kita tampilkan errornya
+               responseData.getMessages().add(err.getDefaultMessage());
+           }
+           responseData.setStatus(false);
+           responseData.setPayload(null);
+           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+       }
+       responseData.setStatus(true);
+       responseData.setPayload(productService.save(product));
+       return ResponseEntity.ok(responseData);
+   }
+   //sebelum validasi
+    // public Product update(@RequestBody Product product) {
+    //     return productService.save(product);
+    // }
 
     @DeleteMapping("/{id}")
     public void removeOne(@PathVariable("id") Long id){
