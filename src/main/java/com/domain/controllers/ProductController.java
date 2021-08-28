@@ -5,6 +5,7 @@ import javax.validation.Valid;
 
 import com.domain.dto.ResponseData;
 import com.domain.model.entities.Product;
+import com.domain.model.entities.Supplier;
 import com.domain.services.ProductService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,5 +101,10 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public void removeOne(@PathVariable("id") Long id){
         productService.removeOne(id);
+    }
+
+    @PostMapping("/{id}")
+    public void addSuppllier(@RequestBody Supplier supplier, @PathVariable("id") Long productId){
+        productService.addSuppllier((supplier), productId);
     }
 }

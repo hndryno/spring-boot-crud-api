@@ -1,17 +1,30 @@
 package com.domain.model.entities;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+// import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
 @Table(name="tbl_product")
+//ini untuk handle data produnya ditampilkan juga di entity
+@JsonIdentityInfo(
+    generator = ObjectIdGenerators.PropertyGenerator.class, property = "id"
+)
 public class Product implements Serializable {
 
     // private static final long SerialversionUID = 1L;
@@ -30,9 +43,34 @@ public class Product implements Serializable {
 
     private double price;
 
+    //buat relasi
+    @ManyToOne
+    private Category category;
+
+    //product berelasi many to many dengan supplier
+    //di supplier juga buat relasi many to many dengan product
+    @ManyToMany
+    @JoinTable(
+        name="tbl_product_supplier",
+        joinColumns = @JoinColumn(name="product_id"),
+        inverseJoinColumns = @JoinColumn(name="supplier_id")
+    ) //untuk tabel perantara antara table product dengan tabel supplier
+    //nanti akan membentuk kolom relasinya yaitu kolom product id dan kolom supplier id
+    //setelah buat disini jangn lupa buat disupplier juga, map bynya
+    // @JsonManagedReference //ini utk hanle infinite loop. di suppliernya juga tambahin
+    private Set<Supplier> suppliers;
+
     //setter getter dan constructor wajib dibuat, karena belum pakai Lombok jadi kita buat manual 
     //constructor, cara buatnya klik kanan pilih source action, lalu pilih constructor
     public Product() {
+    }
+
+    public Set<Supplier> getSuppliers() {
+        return suppliers;
+    }
+
+    public void setSuppliers(Set<Supplier> suppliers) {
+        this.suppliers = suppliers;
     }
 
     //setter getters, cara buatnya klik kanan pilih source action, lalu pilih setter getters
@@ -66,6 +104,14 @@ public class Product implements Serializable {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     

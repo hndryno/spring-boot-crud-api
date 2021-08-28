@@ -6,12 +6,13 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 
 import com.domain.model.entities.Product;
+import com.domain.model.entities.Supplier;
 import com.domain.model.repo.ProductRepo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-//pada aplikasi yang sangat kompleks, ini isinya adalah businiess logic
+//pada aplikasi yang sangat kompleks, ini isinya adalah businiss logic
 @Service
 @Transactional
 public class ProductService {
@@ -46,6 +47,18 @@ public class ProductService {
     //bagaimana jika kita ingin membuat fungsi tambahan (fungsi custom)? tinggal didefenisikan di repo langsung
     public List<Product> findByName(String nama){
         return productRepo.findByNamaContains(nama);
+    }
+
+    //fungsi tambahan, add fungsi tambahan kedalam produk
+    public void addSuppllier(Supplier supplier, Long productId){
+        Product product = findOne(productId);
+
+        if(product == null){
+            throw new RuntimeException("Product with ID" + productId+ "tidak ditemukan");
+        }
+
+        product.getSuppliers().add(supplier);
+        save(product);
     }
 
 }
