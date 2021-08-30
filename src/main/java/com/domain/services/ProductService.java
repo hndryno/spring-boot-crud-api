@@ -1,5 +1,6 @@
 package com.domain.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +19,10 @@ import org.springframework.stereotype.Service;
 public class ProductService {
     @Autowired
     private ProductRepo productRepo;
+
+    //ini cara agar satu controller bisa panggil 2 service, tinggal panggil aja sebenernya servicenya, ini contoh service supplier di product controller
+    @Autowired
+    private SupplierService supplierService;
 
     //di java create sama saja dengan update, dengan sangat kerennya si jda ini tau berdasarkan data yang kita input di product itu
     public Product save(Product product){
@@ -61,4 +66,28 @@ public class ProductService {
         save(product);
     }
 
-}
+    //abis ini kita ke controllernya
+    public Product findProductByNama(String nama){
+        return productRepo.findProductByNama(nama);
+    }
+
+    //mencari product berdasarkan nama menggunakan like
+    public List<Product> findProductByNamaLike(String nama){
+        return productRepo.findProductByNamaLike("%"+nama+"%");
+    }
+
+    //mencari product berdasarkan relasinya dengan kategori menggunakan kategori id
+    public List<Product> findProductByCategoryId(Long categoryId){
+        return productRepo.findProductByCategoryId(categoryId);
+    }
+
+    public List<Product> findByProductSupplier(Long supplierId){
+        Supplier supplier = supplierService.findOne(supplierId);
+        if(supplier == null){
+            return new ArrayList<Product>();
+        }
+
+        return productRepo.findProductBySupplier(supplier);     
+
+    }
+}   

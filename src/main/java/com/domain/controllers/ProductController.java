@@ -1,11 +1,15 @@
 package com.domain.controllers;
 
+import java.util.List;
+
 import javax.management.RuntimeErrorException;
 import javax.validation.Valid;
 
 import com.domain.dto.ResponseData;
+import com.domain.dto.SearchData;
 import com.domain.model.entities.Product;
 import com.domain.model.entities.Supplier;
+import com.domain.model.repo.ProductRepo;
 import com.domain.services.ProductService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,5 +110,28 @@ public class ProductController {
     @PostMapping("/{id}")
     public void addSuppllier(@RequestBody Supplier supplier, @PathVariable("id") Long productId){
         productService.addSuppllier((supplier), productId);
+    }
+
+    //didapat dari service
+    @PostMapping("/search/name")
+    public Product getProductByName(@RequestBody SearchData searchData){
+        return productService.findProductByNama(searchData.getSearchKey());
+    }
+
+    //kalau returnnya array kita pakai list
+    @PostMapping("/search/namelike")
+    public List<Product> getProductByNamaLike(@RequestBody SearchData searchData){
+        // System.out.println();
+        return productService.findProductByNamaLike(searchData.getSearchKey());
+    }
+
+    @GetMapping("/search/category/{categoryId}")
+    public List<Product> getProductByCategoryId(@PathVariable("categoryId") Long categoryId){
+        return productService.findProductByCategoryId(categoryId);
+    }
+
+    @GetMapping("/search/supplier/{supplierId}")
+    public List<Product> getProductBySupplierId(@PathVariable("supplierId") Long supplierId){
+        return productService.findByProductSupplier(supplierId);
     }
 }
