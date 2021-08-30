@@ -1,10 +1,12 @@
 package com.domain.controllers;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
 
 import com.domain.dto.ResponseData;
+import com.domain.dto.SearchData;
 import com.domain.dto.SupplierDto;
 import com.domain.model.entities.Supplier;
 import com.domain.services.SupplierService;
@@ -120,5 +122,26 @@ public class SupplierController {
     public void removeOne(@PathVariable("id") Long id){
         supplierService.removeOne(id);
     }
+
+    @PostMapping("/search/email")
+    public Supplier findByEmail(@RequestBody SearchData searchData) {
+        return supplierService.findByEmail(searchData.getSearchKey());
+    }
+
+    @PostMapping("/search/name")
+    public List <Supplier> findByNameContains(@RequestBody SearchData searchData) {
+        return supplierService.findByNameContains(searchData.getSearchKey());
+    }
+
+    @PostMapping("search/nameoremail")
+    public List <Supplier> findByNameContainsOrEmailContains(@RequestBody SearchData searchData){
+        return supplierService.findByNameContainsOrEmailContains(searchData.getSearchKey(), searchData.getSearchOtherKey());
+    }
+
+    // @PostMapping("search/nameorderbyid")
+    // public List <Supplier> findByNameOrderById(@RequestBody SearchData searchData){
+    //     return supplierService.findByNameOrderById(searchData.getSearchKey());
+    // }
+    
 
 }

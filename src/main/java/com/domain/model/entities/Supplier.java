@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 // import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -18,9 +19,9 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @Entity
 @Table(name="suppliers")
 //ini untuk handle data product ditampilkan juga di entity
-@JsonIdentityInfo(
-    generator = ObjectIdGenerators.PropertyGenerator.class, property = "id"
-)
+// @JsonIdentityInfo(
+//     generator = ObjectIdGenerators.PropertyGenerator.class, property = "id"
+// )
 public class Supplier implements Serializable { //utk memastikan bahwa kelas supplier kita bisa di serialize
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +34,7 @@ public class Supplier implements Serializable { //utk memastikan bahwa kelas sup
     private String email;
 
     @ManyToMany(mappedBy = "suppliers")
-    // @JsonBackReference//ini utk hanle infinite loop. di productnya juga tambahin
+    @JsonBackReference//ini utk hanle infinite loop. di productnya juga tambahin
     private Set<Product> products; // jadi kita bisa tau supplier ini productnya apa saja.
 
     public Long getId() {

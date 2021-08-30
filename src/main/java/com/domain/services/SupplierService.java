@@ -1,5 +1,6 @@
 package com.domain.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.TransactionScoped;
@@ -37,4 +38,20 @@ public class SupplierService {
     public void removeOne(Long id){
         supplierRepo.deleteById(id);
     }
+
+    public Supplier findByEmail(String email){
+        return supplierRepo.findByEmail(email);
+    }
+
+    public List <Supplier> findByNameContains(String name){
+        return supplierRepo.findByNameContains(name);
+    }
+
+    public List <Supplier> findByNameContainsOrEmailContains(String name, String email){
+        return supplierRepo.findByNameContainsOrEmailContains(name, email);
+    }
+
+    // public List <Supplier> findByNameOrderById(String name){
+    //     return supplierRepo.findByNameContainsOrderByIdDesc(name);
+    // }
 }

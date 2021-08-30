@@ -16,15 +16,16 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 // import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name="tbl_product")
 //ini untuk handle data produnya ditampilkan juga di entity
-@JsonIdentityInfo(
-    generator = ObjectIdGenerators.PropertyGenerator.class, property = "id"
-)
+// @JsonIdentityInfo(
+//     generator = ObjectIdGenerators.PropertyGenerator.class, property = "id"
+// )
 public class Product implements Serializable {
 
     // private static final long SerialversionUID = 1L;
@@ -57,7 +58,7 @@ public class Product implements Serializable {
     ) //untuk tabel perantara antara table product dengan tabel supplier
     //nanti akan membentuk kolom relasinya yaitu kolom product id dan kolom supplier id
     //setelah buat disini jangn lupa buat disupplier juga, map bynya
-    // @JsonManagedReference //ini utk hanle infinite loop. di suppliernya juga tambahin
+    @JsonManagedReference //ini utk hanle infinite loop. di suppliernya juga tambahin
     private Set<Supplier> suppliers;
 
     //setter getter dan constructor wajib dibuat, karena belum pakai Lombok jadi kita buat manual 
